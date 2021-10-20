@@ -1,5 +1,5 @@
 ---
-title: "Actividad Fisica, zonas verdes y salud mental"
+title: "Actividad física, zonas verdes y salud mental"
 author: "Vera García Díez y Sara González Bárcena"
 date: "20/10/2021"
 output: html_document
