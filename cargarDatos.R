@@ -19,6 +19,7 @@ AF <- select(.data = AF, c(1,3:4))
 View(AF)
 
 # Tabla problemas o enfermedades crónicas o de larga evolución padecidas en los últimos 12 meses y diagnosticadas por un médico según sexo y comunidad autónoma.
+
 library(readxl)
 library(dplyr)
 
@@ -27,13 +28,9 @@ saludMental <- read_excel("INPUT/DATA/s_mental.xlsx",
 
 saludMental <- slice(.data = saludMental, c(3:22))
 
-saludMental
-View(saludMental)
-
 
 SM <- select(.data = saludMental, c(1,60,63))
 names(SM) <- c("Comunidades","Depresión","Ansiedad")
-
 
 SM
 View(SM)
