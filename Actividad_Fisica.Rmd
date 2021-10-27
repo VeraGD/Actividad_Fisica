@@ -5,6 +5,26 @@ date: "20/10/2021"
 output: html_document
 ---
 
+
+## Objetivo General
+Analizar si existe alguna relación entre la realización de actividad física a mayor zonas verdes y la salud mental de las personas.
+
+## Objetivos específicos
+
+### 1. Relación actividad física y zonas verdes
+Análisis sobre a mayor porcentaje de áreas verdes, más personas realizan actividad física.
+
+### 2. Relación actividad física y salud mental
+Análisis sobre a mayor frecuencia de actvidad física, disminuye la población que padece depresión y ansiedad.
+
+### 3. Relación salud mental y zonas verdes
+Análisis sobre si disminuye las personas con ansiedad o depresión a mayor zonas verdes.
+
+## Metodología
+
+## Resultados
+
+
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
