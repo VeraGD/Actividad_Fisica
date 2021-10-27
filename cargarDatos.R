@@ -39,7 +39,7 @@ View(SM)
 library(readxl)
 zonasVerdes <- read_excel("INPUT/DATA/satisf_ZV.xlsx", 
                           range = "A7:F27")
-
-zonasVerdes
-View(zonasVerdes)
-
+ZV <- select(.data = zonasVerdes, c(1,6))
+names(ZV) <- c("Comunidades","Valoración")
+ZV
+View(ZV)
