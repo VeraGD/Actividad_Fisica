@@ -12,12 +12,13 @@ actFisica <- slice(.data = actFisica, 2:21)
 
 AF <- pivot_longer(data = actFisica, names_to = "Frecuencia", values_to = "Valores", cols = c(`Ninguno`:`No consta`))
 
-names(AF) <- c("Comunidades","Total","Frecuencia","Valores")
+names(AF) <- c("Comunidades","Total","Frecuencia","Días")
 
 AF <- select(.data = AF, c(1,3:4))
 
-View(AF)
+AF$Comunidades <- as.factor(AF$Comunidades)
 
+View(AF)
 # Tabla problemas o enfermedades crónicas o de larga evolución padecidas en los últimos 12 meses y diagnosticadas por un médico según sexo y comunidad autónoma.
 
 library(readxl)
@@ -43,3 +44,26 @@ ZV <- select(.data = zonasVerdes, c(1,6))
 names(ZV) <- c("Comunidades","Valoración")
 ZV
 View(ZV)
+
+# Comprobar que todos los niveles son iguales.
+
+levels(AF$Comunidades)
+ZV$Comunidades
+SM$Comunidades
+
+# Relación entre zonas verdes y actividad física.
+
+AF_ZV <- left_join(x = AF, y = ZV, by = c("Comunidades"))
+View(AF_ZV)
+
+levels(AF_ZV$Comunidades)
+
+# Relación entre actividad física y salud mental.
+AF_SM <- left_join(x = AF, y = SM, by = c("Comunidades"))
+View(AF_SM)
+
+# Relación entre zonas verdes y salud mental.
+ZV_SM <- left_join(x = ZV, y = SM, by = c("Comunidades"))
+View(ZV_SM)
+
+
