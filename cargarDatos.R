@@ -4,21 +4,24 @@
 library(readxl)
 library(dplyr)
 library(tidyverse)
+
 actFisica <- read_excel("INPUT/DATA/Act_Fisica.xlsx", 
                         range = "A7:H70")
 
-
-actFisica <- slice(.data = actFisica, 2:21)
-
-AF <- pivot_longer(data = actFisica, names_to = "Frecuencia", values_to = "Valores", cols = c(`Ninguno`:`No consta`))
-
-names(AF) <- c("Comunidades","Total","Frecuencia","Días")
-
-AF <- select(.data = AF, c(1,3:4))
+AF <-
+actFisica %>% 
+  slice(2:21) %>% 
+  rename(Comunidades = ...1, d1_2 = `1 o 2 días a la semana`, 
+         d3_4 = `3 o 4 días a la semana`,
+         d5_6 = `5 o 6 días a la semana`,
+         d7 = `7 días a la semana`) %>% 
+  pivot_longer(names_to = "Frecuencia", values_to = "Días", cols = c(`Ninguno`:`No consta`)) 
+  
 
 AF$Comunidades <- as.factor(AF$Comunidades)
 
-View(AF)
+View(AF)  
+
 # Tabla problemas o enfermedades crónicas o de larga evolución padecidas en los últimos 12 meses y diagnosticadas por un médico según sexo y comunidad autónoma.
 
 library(readxl)
