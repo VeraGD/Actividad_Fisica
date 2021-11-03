@@ -56,19 +56,45 @@ levels(AF$Comunidades)
 ZV$Comunidades
 SM$Comunidades
 
+
 # Relación entre zonas verdes y actividad física.
 
-AF_ZV <- left_join(x = AF, y = ZV, by = c("Comunidades"))
+AF_ZV <-  
+  AF %>% 
+  select(Comunidades, Frecuencia, Días) %>% 
+  full_join(x = ., 
+            y = ZV %>% 
+              select(comunidades, Valoración),
+            by = c("Comunidades" = "comunidades"))
+
+AF_ZV 
 View(AF_ZV)
 
-levels(AF_ZV$Comunidades)
+#levels(AF_ZV$Comunidades)
 
 # Relación entre actividad física y salud mental.
-AF_SM <- left_join(x = AF, y = SM, by = c("Comunidades"))
+AF_SM <-  
+  AF %>% 
+  select(Comunidades, Frecuencia, Días) %>% 
+  full_join(x = ., 
+            y = SM %>% 
+              select(Comunidades, depresión, ansiedad),
+            by = "Comunidades")
+
+AF_SM
 View(AF_SM)
 
 # Relación entre zonas verdes y salud mental.
-ZV_SM <- left_join(x = ZV, y = SM, by = c("Comunidades"))
+
+ZV_SM <-  
+  ZV %>% 
+  select(comunidades, Valoración) %>% 
+  full_join(x = ., 
+            y = SM %>% 
+              select(Comunidades, depresión, ansiedad),
+            by = c("comunidades" = "Comunidades"))
+
+ZV_SM
 View(ZV_SM)
 
 
