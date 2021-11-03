@@ -29,13 +29,12 @@ library(dplyr)
 
 saludMental <- read_excel("INPUT/DATA/s_mental.xlsx", 
                           range = "A7:CS71")
+SM <- saludMental %>% 
+  rename(Comunidades = ...1, depresión = ...60, ansiedad = ...63) %>% 
+  slice(c(3:22))
+  
 
-saludMental <- slice(.data = saludMental, c(3:22))
-
-
-SM <- select(.data = saludMental, c(1,60,63))
-names(SM) <- c("Comunidades","Depresión","Ansiedad")
-
+# select(c(1,60,63))  
 SM
 View(SM)
 
@@ -43,8 +42,11 @@ View(SM)
 library(readxl)
 zonasVerdes <- read_excel("INPUT/DATA/satisf_ZV.xlsx", 
                           range = "A7:F27")
-ZV <- select(.data = zonasVerdes, c(1,6))
-names(ZV) <- c("Comunidades","Valoración")
+ZV <- zonasVerdes %>% 
+  rename(comunidades = ...1, Valoración = `Valoración media`)
+
+# select(c(1,6)) 
+
 ZV
 View(ZV)
 
