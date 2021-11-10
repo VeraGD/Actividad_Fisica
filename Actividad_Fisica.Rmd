@@ -9,10 +9,49 @@ output: html_document
 ## Objetivo General
 Analizar si existe alguna relación entre la realización de actividad física a mayor zonas verdes y la salud mental de las personas.
 
+Los datos han sido obtenidos del *Instituto Nacional de Estadística (INE)*.
+
+- **Satisfacción con las zonas verdes por CCAA y nivel de satisfacción **
+[satisfaccion_zonas_verdes](https://www.ine.es/jaxi/Datos.htm?path=/t00/ICV/dim8/&file=82101.px)
+
+- **Enfermedades crónicas**
+[enfermedades_cronicas](https://www.ine.es/jaxiT3/Datos.htm?tpx=47669)
+
+- **Número de días por semana de ejercicio físico según sexo y cCCAA. Población de 15 y más años**
+[ejercicio_fisico](https://www.ine.es/jaxiT3/Datos.htm?tpx=47605)
+
+
+
+
 ## Objetivos específicos
 
 ### 1. Relación actividad física y zonas verdes
 Análisis sobre a mayor porcentaje de áreas verdes, más personas realizan actividad física.
+
+
+```{r, eval = FALSE}
+library(readxl)
+library(dplyr)
+library(tidyverse)
+
+actFisica <- read_excel("INPUT/DATA/Act_Fisica.xlsx", 
+                        range = "A7:H70")
+
+AF <-
+actFisica %>% 
+  slice(2:21) %>% 
+  rename(Comunidades = ...1, d1_2 = `1 o 2 días a la semana`, 
+         d3_4 = `3 o 4 días a la semana`,
+         d5_6 = `5 o 6 días a la semana`,
+         d7 = `7 días a la semana`) %>% 
+  pivot_longer(names_to = "Frecuencia", values_to = "Días", cols = c(`Ninguno`:`No consta`))
+
+```
+
+```{r eval=FALSE}
+AF
+```
+
 
 ### 2. Relación actividad física y salud mental
 Análisis sobre a mayor frecuencia de actvidad física, disminuye la población que padece depresión y ansiedad.
