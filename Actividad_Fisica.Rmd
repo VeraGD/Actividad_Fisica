@@ -29,61 +29,121 @@ Los datos han sido obtenidos del *Instituto Nacional de Estadística (INE)*.
 Análisis sobre a mayor porcentaje de áreas verdes, más personas realizan actividad física.
 
 
-```{r, eval = FALSE}
+```{r include=FALSE}
 library(readxl)
 library(dplyr)
 library(tidyverse)
+library(DT)
 
 actFisica <- read_excel("INPUT/DATA/Act_Fisica.xlsx", 
                         range = "A7:H70")
 
 AF <-
 actFisica %>% 
-  slice(2:21) %>% 
+  slice(3:21) %>% 
   rename(Comunidades = ...1, d1_2 = `1 o 2 días a la semana`, 
          d3_4 = `3 o 4 días a la semana`,
          d5_6 = `5 o 6 días a la semana`,
          d7 = `7 días a la semana`) %>% 
-  pivot_longer(names_to = "Frecuencia", values_to = "Días", cols = c(`Ninguno`:`No consta`))
+  select(c(1,2,4:7)) %>% 
+  pivot_longer(names_to = "Frecuencia", values_to = "Días", cols = c(`d1_2`:`d7`)) %>% 
+  group_by(Comunidades) %>% 
+  summarise(.data = ., dias_prom = mean(Días, na.rm = TRUE))
+
+zonasVerdes <- read_excel("INPUT/DATA/satisf_ZV.xlsx", 
+                          range = "A7:F27")
+ZV <- zonasVerdes %>% 
+  slice(2:20) %>% 
+  rename(comunidades = ...1, Valoración = `Valoración media`)
+
+saludMental <- read_excel("INPUT/DATA/s_mental.xlsx", 
+                          range = "A7:CS71")
+
+SM <- saludMental %>% 
+  rename(Comunidades = ...1, depresión = ...60, ansiedad = ...63) %>% 
+  pivot_longer(names_to = "Enfermedades", values_to = "Personas", cols = c(depresión, ansiedad)) %>%
+  slice(c(7:44)) %>% 
+  select(c(1,96,97))
 
 ```
 
-```{r eval=FALSE}
-AF
+
+```{r include=FALSE}
+AF_ZV <-  
+  AF %>% 
+  select(Comunidades, dias_prom) %>% 
+  full_join(x = ., 
+            y = ZV %>% 
+              select(comunidades, Valoración),
+            by = c("Comunidades" = "comunidades"))
+saludMental <- read_excel("INPUT/DATA/s_mental.xlsx", 
+                          range = "A7:CS71")
+
+
+
+
+grafico1 <- AF_ZV %>% 
+  filter(Valoración > 4) %>% 
+  ggplot(data = ., aes(x = Valoración, y = dias_prom)) +
+    geom_point(aes(colour = factor(Comunidades))) +
+    geom_smooth() +
+    theme_bw()
+
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+DT::datatable(AF_ZV)
+plot(grafico1)
 ```
 
 
 ### 2. Relación actividad física y salud mental
 Análisis sobre a mayor frecuencia de actvidad física, disminuye la población que padece depresión y ansiedad.
 
+```{r include=FALSE}
+
+AF_SM <-  
+  AF %>% 
+  select(Comunidades, dias_prom) %>% 
+  full_join(x = ., 
+            y = SM %>% 
+              select(Comunidades, Enfermedades, Personas),
+            by = "Comunidades")
+
+grafico2 <- AF_SM %>% 
+  ggplot(data = ., aes(x = Personas, y = dias_prom)) +
+  geom_point(aes(colour = factor(Comunidades))) +
+  geom_smooth() +
+  theme_bw()
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+DT::datatable(AF_SM)
+plot(grafico2)
+```
+
 ### 3. Relación salud mental y zonas verdes
 Análisis sobre si disminuye las personas con ansiedad o depresión a mayor zonas verdes.
+```{r include=FALSE}
+ZV_SM <-  
+  ZV %>% 
+  select(comunidades, Valoración) %>% 
+  full_join(x = ., 
+            y = SM %>% 
+              select(Comunidades, Enfermedades, Personas),
+            by = c("comunidades" = "Comunidades"))
 
-## Metodología
+grafico3 <- ZV_SM %>% 
+  filter(Valoración > 4) %>% 
+  ggplot(data = ., aes(x = Personas, y = Valoración)) +
+  geom_point(aes(colour = factor(comunidades))) +
+  geom_smooth() +
+  theme_bw()
 
-## Resultados
-
-
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## R Markdown
-
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
-
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
-
-```{r cars}
-summary(cars)
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+DT::datatable(ZV_SM)
+plot(grafico3)
 ```
 
-## Including Plots
-
-You can also embed plots, for example:
-
-```{r pressure, echo=FALSE}
-plot(pressure)
-```
-
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
