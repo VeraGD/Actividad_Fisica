@@ -15,10 +15,14 @@ actFisica %>%
          d3_4 = `3 o 4 días a la semana`,
          d5_6 = `5 o 6 días a la semana`,
          d7 = `7 días a la semana`) %>% 
-  pivot_longer(names_to = "Frecuencia", values_to = "Días", cols = c(`Ninguno`:`No consta`)) 
+  select(c(1,2,4:7)) %>% 
+  pivot_longer(names_to = "Frecuencia", values_to = "Días", cols = c(`d1_2`:`d7`)) %>% 
+  group_by(Comunidades) %>% 
+  summarise(.data = ., dias_prom = mean(Días, na.rm = TRUE))
   
 
 AF$Comunidades <- as.factor(AF$Comunidades)
+
 
 View(AF)  
 
@@ -31,7 +35,9 @@ saludMental <- read_excel("INPUT/DATA/s_mental.xlsx",
                           range = "A7:CS71")
 SM <- saludMental %>% 
   rename(Comunidades = ...1, depresión = ...60, ansiedad = ...63) %>% 
-  slice(c(4:22))
+  pivot_longer(names_to = "Enfermedades", values_to = "Personas", cols = c(depresión, ansiedad)) %>%
+  slice(c(7:44)) %>% 
+  select(c(1,96,97))
   
 
 # select(c(1,60,63))  
@@ -63,7 +69,7 @@ SM$Comunidades
 
 AF_ZV <-  
   AF %>% 
-  select(Comunidades, Frecuencia, Días) %>% 
+  select(Comunidades, dias_prom) %>% 
   full_join(x = ., 
             y = ZV %>% 
               select(comunidades, Valoración),
@@ -83,7 +89,7 @@ View(AF_ZV)
 
 AF_ZV %>% 
   filter(Valoración > 4) %>% 
-  ggplot(data = ., aes(x = Valoración, y = Días)) +
+  ggplot(data = ., aes(x = Valoración, y = dias_prom)) +
     geom_point(colour = "red") +
     geom_smooth() +
     theme_bw()
@@ -93,28 +99,23 @@ AF_ZV %>%
 # Relación entre actividad física y salud mental.
 AF_SM <-  
   AF %>% 
-  select(Comunidades, Frecuencia, Días) %>% 
+  select(Comunidades, dias_prom) %>% 
   full_join(x = ., 
             y = SM %>% 
-              select(Comunidades, depresión, ansiedad),
+              select(Comunidades, Enfermedades, Personas),
             by = "Comunidades")
 
 AF_SM
 View(AF_SM)
 
 AF_SM %>% 
-  ggplot(data = ., aes(x = ansiedad, y = Días)) +
+  ggplot(data = ., aes(x = Personas, y = dias_prom)) +
   geom_point(colour = "red") +
   geom_smooth() +
-  theme_bw() # no me pinta la linea
+  theme_bw()# no me pinta la linea
 
 
-AF_SM %>% 
-  ggplot(data = ., aes(x = depresión, y = Días)) +
-  geom_point(colour = "red") +
-  geom_smooth() +
-  theme_bw()
-
+levels(AF$Frecuencia)
 # Relación entre zonas verdes y salud mental.
 
 ZV_SM <-  
@@ -122,10 +123,15 @@ ZV_SM <-
   select(comunidades, Valoración) %>% 
   full_join(x = ., 
             y = SM %>% 
-              select(Comunidades, depresión, ansiedad),
+              select(Comunidades, Enfermedades, Personas),
             by = c("comunidades" = "Comunidades"))
 
 ZV_SM
 View(ZV_SM)
 
-
+ZV_SM %>% 
+  filter(Valoración > 4) %>% 
+  ggplot(data = ., aes(x = Valoración, y = Personas)) +
+  geom_point(colour = "red") +
+  geom_smooth() +
+  theme_bw()
