@@ -105,7 +105,14 @@ AF_ZV %>%
   ggplot(data = ., aes(x = Valoración, y = dias_prom)) +
     geom_point(aes(colour = factor(Comunidades))) +
     geom_smooth() +
-    theme_bw()
+    theme_bw() +
+  labs(
+    x = "Valoración zonas verdes",
+    y = "Frecuencia de actividad física",
+    title = "Relación actividades física y zonas verdes ",
+    colour = "Comunidades Autónomas"
+    
+  )
 
 
 
@@ -127,8 +134,16 @@ View(AF_SM)
 AF_SM %>% 
   ggplot(data = ., aes(x = Personas, y = dias_prom)) +
   geom_point(aes(colour = factor(Comunidades))) +
-  geom_smooth() +
-  theme_bw()# no me pinta la linea
+  geom_smooth() + # no me pinta la linea
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+  facet_wrap( ~ Enfermedades, nrow = 1) +
+  labs(
+    x = "Nº personas con trastorno mental ",
+    y = "Frecuencia de actividad física",
+    title = "Relación actividades física y salud mental ",
+    colour = "Comunidades Autónomas"
+    
+  )
 
 
 
@@ -148,8 +163,16 @@ View(ZV_SM)
 
 # Gráfica
 ZV_SM %>% 
-  filter(Valoración > 4) %>% 
+  #filter(Valoración > 4) %>% 
   ggplot(data = ., aes(x = Personas, y = Valoración)) +
   geom_point(aes(colour = factor(comunidades))) +
   geom_smooth() +
-  theme_bw()
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+  facet_wrap( ~ Enfermedades, nrow = 1) +
+  labs(
+    x = "Nº personas con trastorno mental ",
+    y = "Valoración zonas verdes",
+    title = "Relación zonas verdes y salud mental ",
+    colour = "Comunidades Autónomas"
+    
+  )
