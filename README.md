@@ -12,4 +12,5 @@ Sara González y Vera García
   Análisis sobre a mayor frecuencia de actvidad física, disminuye la población que padece depresión y ansiedad.
  
 * Relación salud mental y zonas verdes
+
   Análisis sobre si disminuye las personas con ansiedad o depresión a mayor zonas verdes.
