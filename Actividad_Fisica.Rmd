@@ -1,9 +1,12 @@
 ---
 title: "Actividad física, zonas verdes y salud mental"
 author: "Vera García Díez y Sara González Bárcena"
-date: "20/10/2021"
+date: '`r format(Sys.Date(), "%d %B %Y")`'
 output: html_document
 ---
+
+
+
 
 
 ## Objetivo General
@@ -20,24 +23,59 @@ Los datos han sido obtenidos del *Instituto Nacional de Estadística (INE)*.
 - **Número de días por semana de ejercicio físico según sexo y cCCAA. Población de 15 y más años**
 [ejercicio_fisico](https://www.ine.es/jaxiT3/Datos.htm?tpx=47605)
 
-
-
-
-## Objetivos específicos
-
-### 1. Relación actividad física y zonas verdes
-Análisis sobre a mayor porcentaje de áreas verdes, más personas realizan actividad física.
-
-
 ```{r include=FALSE}
 library(readxl)
 library(dplyr)
 library(tidyverse)
 library(DT)
+```
 
+### Tabla modificada satisfacción con las zonas verdes por CCA y nivel de satisfacción.
+
+```{r include=FALSE}
+zonasVerdes <- read_excel("INPUT/DATA/satisf_ZV.xlsx", 
+                          range = "A7:F27")
+```
+
+```{r echo=TRUE}
+ZV <- zonasVerdes %>% 
+  slice(2:20) %>% 
+  rename(comunidades = ...1, Valoración = `Valoración media`)
+
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+DT::datatable(ZV)
+```
+
+### Tabla modificada enfermedades crónicas, ansiedad y depresión, por CCAA y nº de personas.
+
+```{r include=FALSE}
+saludMental <- read_excel("INPUT/DATA/s_mental.xlsx", 
+                          range = "A7:CS71")
+```
+
+```{r echo=TRUE}
+SM <- saludMental %>% 
+  rename(Comunidades = ...1, depresión = ...60, ansiedad = ...63) %>% 
+  pivot_longer(names_to = "Enfermedades", values_to = "Personas", cols = c(depresión, ansiedad)) %>%
+  slice(c(7:44)) %>% 
+  select(c(1,96,97))
+
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+DT::datatable(SM)
+```
+
+
+### Tabla modificada al número de días promedio a la semana por CCAA.
+```{r include=FALSE}
 actFisica <- read_excel("INPUT/DATA/Act_Fisica.xlsx", 
                         range = "A7:H70")
+```
 
+```{r echo=TRUE}
 AF <-
 actFisica %>% 
   slice(3:21) %>% 
@@ -50,25 +88,23 @@ actFisica %>%
   group_by(Comunidades) %>% 
   summarise(.data = ., dias_prom = mean(Días, na.rm = TRUE))
 
-zonasVerdes <- read_excel("INPUT/DATA/satisf_ZV.xlsx", 
-                          range = "A7:F27")
-ZV <- zonasVerdes %>% 
-  slice(2:20) %>% 
-  rename(comunidades = ...1, Valoración = `Valoración media`)
-
-saludMental <- read_excel("INPUT/DATA/s_mental.xlsx", 
-                          range = "A7:CS71")
-
-SM <- saludMental %>% 
-  rename(Comunidades = ...1, depresión = ...60, ansiedad = ...63) %>% 
-  pivot_longer(names_to = "Enfermedades", values_to = "Personas", cols = c(depresión, ansiedad)) %>%
-  slice(c(7:44)) %>% 
-  select(c(1,96,97))
-
 ```
 
 
-```{r include=FALSE}
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+DT::datatable(AF)
+```
+
+
+
+
+## Objetivos específicos
+
+### 1. Relación actividad física y zonas verdes
+Análisis sobre a mayor porcentaje de áreas verdes, más personas realizan actividad física.
+
+
+```{r echo=TRUE}
 AF_ZV <-  
   AF %>% 
   select(Comunidades, dias_prom) %>% 
@@ -76,23 +112,23 @@ AF_ZV <-
             y = ZV %>% 
               select(comunidades, Valoración),
             by = c("Comunidades" = "comunidades"))
-saludMental <- read_excel("INPUT/DATA/s_mental.xlsx", 
-                          range = "A7:CS71")
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+DT::datatable(AF_ZV)
+```
 
 
-
-
+```{r echo=TRUE}
 grafico1 <- AF_ZV %>% 
   filter(Valoración > 4) %>% 
   ggplot(data = ., aes(x = Valoración, y = dias_prom)) +
     geom_point(aes(colour = factor(Comunidades))) +
     geom_smooth() +
     theme_bw()
-
 ```
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
-DT::datatable(AF_ZV)
 plot(grafico1)
 ```
 
@@ -102,7 +138,6 @@ Análisis sobre a mayor frecuencia de actvidad física, disminuye la población 
 
 
 ```{r include=FALSE}
-
 AF_SM <-  
   AF %>% 
   select(Comunidades, dias_prom) %>% 
@@ -110,7 +145,13 @@ AF_SM <-
             y = SM %>% 
               select(Comunidades, Enfermedades, Personas),
             by = "Comunidades")
+```
 
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+DT::datatable(AF_SM)
+```
+
+```{r include=FALSE}
 grafico2 <- AF_SM %>% 
   ggplot(data = ., aes(x = Personas, y = dias_prom)) +
   geom_point(aes(colour = factor(Comunidades))) +
@@ -118,10 +159,11 @@ grafico2 <- AF_SM %>%
   theme_bw()
 ```
 
-```{r echo=FALSE, message=FALSE, warning=FALSE}
-DT::datatable(AF_SM)
+```{r}
 plot(grafico2)
 ```
+```
+
 
 ### 3. Relación salud mental y zonas verdes
 Análisis sobre si disminuye las personas con ansiedad o depresión a mayor zonas verdes.
@@ -134,6 +176,14 @@ ZV_SM <-
               select(Comunidades, Enfermedades, Personas),
             by = c("comunidades" = "Comunidades"))
 
+
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+DT::datatable(ZV_SM)
+```
+
+```{r include=FALSE}
 grafico3 <- ZV_SM %>% 
   filter(Valoración > 4) %>% 
   ggplot(data = ., aes(x = Personas, y = Valoración)) +
@@ -144,7 +194,6 @@ grafico3 <- ZV_SM %>%
 ```
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
-DT::datatable(ZV_SM)
 plot(grafico3)
 ```
 
