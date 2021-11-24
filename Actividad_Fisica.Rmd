@@ -137,7 +137,7 @@ plot(grafico1)
 Análisis sobre a mayor frecuencia de actvidad física, disminuye la población que padece depresión y ansiedad.
 
 
-```{r include=FALSE}
+```{r echo=TRUE}
 AF_SM <-  
   AF %>% 
   select(Comunidades, dias_prom) %>% 
@@ -151,7 +151,7 @@ AF_SM <-
 DT::datatable(AF_SM)
 ```
 
-```{r include=FALSE}
+```{r echo=TRUE}
 grafico2 <- AF_SM %>% 
   ggplot(data = ., aes(x = Personas, y = dias_prom)) +
   geom_point(aes(colour = factor(Comunidades))) +
@@ -159,15 +159,15 @@ grafico2 <- AF_SM %>%
   theme_bw()
 ```
 
-```{r}
+```{r echo=FALSE, message=FALSE, warning=FALSE}
 plot(grafico2)
 ```
-```
+
 
 
 ### 3. Relación salud mental y zonas verdes
 Análisis sobre si disminuye las personas con ansiedad o depresión a mayor zonas verdes.
-```{r include=FALSE}
+```{r echo=TRUE}
 ZV_SM <-  
   ZV %>% 
   select(comunidades, Valoración) %>% 
@@ -183,7 +183,7 @@ ZV_SM <-
 DT::datatable(ZV_SM)
 ```
 
-```{r include=FALSE}
+```{r echo=TRUE}
 grafico3 <- ZV_SM %>% 
   filter(Valoración > 4) %>% 
   ggplot(data = ., aes(x = Personas, y = Valoración)) +
