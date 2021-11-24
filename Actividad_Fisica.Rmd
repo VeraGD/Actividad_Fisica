@@ -52,14 +52,14 @@ DT::datatable(ZV)
 
 ```{r include=FALSE}
 saludMental <- read_excel("INPUT/DATA/s_mental.xlsx", 
-                          range = "A7:CS71")
+                          range = "A9:CS71")
 ```
 
 ```{r echo=TRUE}
 SM <- saludMental %>% 
-  rename(Comunidades = ...1, depresión = ...60, ansiedad = ...63) %>% 
+  rename(Comunidades = "Ambos sexos", depresión = ...60, ansiedad = ...63) %>% 
   pivot_longer(names_to = "Enfermedades", values_to = "Personas", cols = c(depresión, ansiedad)) %>%
-  slice(c(7:44)) %>% 
+  slice(c(3:44)) %>% 
   select(c(1,96,97))
 
 ```
@@ -123,7 +123,7 @@ DT::datatable(AF_ZV)
 grafico1 <- AF_ZV %>% 
   filter(Valoración > 4) %>% 
   ggplot(data = ., aes(x = Valoración, y = dias_prom)) +
-    geom_point(aes(colour = factor(Comunidades))) +
+    geom_point(aes(colour = factor(Comunidades)), show.legend = FALSE) +
     geom_smooth() +
     theme_bw()
 ```
@@ -154,9 +154,16 @@ DT::datatable(AF_SM)
 ```{r echo=TRUE}
 grafico2 <- AF_SM %>% 
   ggplot(data = ., aes(x = Personas, y = dias_prom)) +
-  geom_point(aes(colour = factor(Comunidades))) +
-  geom_smooth() +
-  theme_bw()
+  geom_point(aes(colour = factor(Comunidades)), show.legend = FALSE) +
+  geom_smooth() + # no me pinta la linea
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+  facet_wrap( ~ Enfermedades, nrow = 1) +
+  labs(
+    x = "Nº personas con trastorno mental ",
+    y = "Frecuencia de actividad física",
+    title = "Relación actividades física y salud mental ",
+    colour = "Comunidades Autónomas"
+  )
 ```
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
@@ -185,12 +192,18 @@ DT::datatable(ZV_SM)
 
 ```{r echo=TRUE}
 grafico3 <- ZV_SM %>% 
-  filter(Valoración > 4) %>% 
-  ggplot(data = ., aes(x = Personas, y = Valoración)) +
-  geom_point(aes(colour = factor(comunidades))) +
+  ggplot(data = , aes(x = Personas, y = Valoración)) +
+  geom_point(aes(colour = factor(comunidades)), show.legend = FALSE) +
   geom_smooth() +
-  theme_bw()
-
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+  facet_wrap( ~ Enfermedades, nrow = 1) +
+  labs(
+    x = "Nº personas con trastorno mental ",
+    y = "Valoración zonas verdes",
+    title = "Relación zonas verdes y salud mental ",
+    colour = "Comunidades Autónomas"
+    
+  )
 ```
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
