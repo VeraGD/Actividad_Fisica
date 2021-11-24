@@ -10,8 +10,9 @@ actFisica <- read_excel("INPUT/DATA/Act_Fisica.xlsx",
 
 # Tabla de enfermedades crónicas
 saludMental <- read_excel("INPUT/DATA/s_mental.xlsx", 
-                          range = "A7:CS71")
+                          range = "A9:CS71")
 
+View(saludMental)
 # Tabla satisfacción con las zonas verdes
 zonasVerdes <- read_excel("INPUT/DATA/satisf_ZV.xlsx", 
                           range = "A7:F27")
@@ -51,10 +52,10 @@ View(AF)
 # últimos 12 meses y diagnosticadas por un médico según sexo y comunidad autónoma.
 
 SM <- saludMental %>% 
-  rename(Comunidades = ...1, depresión = ...60, ansiedad = ...63) %>% 
+  rename(Comunidades = "Ambos sexos", depresión = ...60, ansiedad = ...63) %>% 
   pivot_longer(names_to = "Enfermedades", values_to = "Personas", cols = c(depresión, ansiedad)) %>%
-  slice(c(7:44)) %>% 
-  select(c(1,96,97))
+  slice(c(3:44)) %>% 
+  select(c(1,96,97)) 
   
 SM
 View(SM)
@@ -145,7 +146,19 @@ AF_SM %>%
     
   )
 
-
+AF_SM %>% 
+  ggplot(data = ., aes(x = Personas, y = dias_prom)) +
+  geom_point(aes(colour = factor(Comunidades))) +
+  geom_smooth()  # no me pinta la linea
+  # theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+  # facet_wrap( ~ Enfermedades, nrow = 1) +
+  # labs(
+  #   x = "Nº personas con trastorno mental ",
+  #   y = "Frecuencia de actividad física",
+  #   title = "Relación actividades física y salud mental ",
+  #   colour = "Comunidades Autónomas"
+  #   
+  # )
 
 # * Relación entre zonas verdes y salud mental. ---------------------------
 
