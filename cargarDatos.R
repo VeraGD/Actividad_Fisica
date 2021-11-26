@@ -30,17 +30,17 @@ zonasVerdes <- read_excel("INPUT/DATA/satisf_ZV.xlsx",
 AF <-
 actFisica %>% 
   slice(3:21) %>% 
-  rename(Comunidades = ...1, d1_2 = `1 o 2 días a la semana`, 
+  rename(Comunidades = ...1,
+         d1_2 = `1 o 2 días a la semana`, 
          d3_4 = `3 o 4 días a la semana`,
          d5_6 = `5 o 6 días a la semana`,
          d7 = `7 días a la semana`) %>% 
-  select(c(1,2,4:7)) %>% 
-  pivot_longer(names_to = "Frecuencia", values_to = "Días", cols = c(`d1_2`:`d7`)) %>% 
+  select(c(1,2:7)) %>% 
+  pivot_longer(names_to = "Frecuencia", values_to = "AF_pers", cols = c("Ninguno":`d7`)) %>% 
   group_by(Comunidades) %>% 
-  summarise(.data = ., dias_prom = mean(Días, na.rm = TRUE))
+  summarise(.data = ., pers_prom = mean(AF_pers, na.rm = TRUE))
   
 
-#AF$Comunidades <- as.factor(AF$Comunidades)
 AF
 View(AF)  
 
@@ -51,9 +51,10 @@ View(AF)
 # Tabla problemas o enfermedades crónicas o de larga evolución padecidas en los 
 # últimos 12 meses y diagnosticadas por un médico según sexo y comunidad autónoma.
 
-SM <- saludMental %>% 
+SM <- 
+  saludMental %>% 
   rename(Comunidades = "Ambos sexos", depresión = ...60, ansiedad = ...63) %>% 
-  pivot_longer(names_to = "Enfermedades", values_to = "Personas", cols = c(depresión, ansiedad)) %>%
+  pivot_longer(names_to = "Enfermedades", values_to = "SM_pers", cols = c(depresión, ansiedad)) %>%
   slice(c(3:44)) %>% 
   select(c(1,96,97)) 
   
@@ -69,7 +70,7 @@ View(SM)
 
 ZV <- zonasVerdes %>% 
   slice(2:20) %>% 
-  rename(comunidades = ...1, Valoración = `Valoración media`)
+  rename(comunidades = ...1, Valoracion = `Valoración media`)
 
 ZV
 View(ZV)
@@ -90,10 +91,10 @@ SM$Comunidades
 
 AF_ZV <-  
   AF %>% 
-  select(Comunidades, dias_prom) %>% 
+  select(Comunidades, pers_prom) %>% 
   full_join(x = ., 
             y = ZV %>% 
-              select(comunidades, Valoración),
+              select(comunidades, Valoracion),
             by = c("Comunidades" = "comunidades"))
 
 AF_ZV 
@@ -102,9 +103,9 @@ View(AF_ZV)
  
 # Gráfica
 AF_ZV %>% 
-  filter(Valoración > 4) %>% 
-  ggplot(data = ., aes(x = Valoración, y = dias_prom)) +
-    geom_point(aes(colour = factor(Comunidades)), 
+  filter(Valoracion > 4) %>% 
+  ggplot(data = ., aes(x = Valoracion, y = pers_prom)) +
+    geom_point(aes(colour = Comunidades), 
                show.legend = FALSE) +
     geom_smooth() +
     theme_bw() +
@@ -122,42 +123,68 @@ AF_ZV %>%
 
 AF_SM <-  
   AF %>% 
-  select(Comunidades, dias_prom) %>% 
+  select(Comunidades, pers_prom) %>% 
   full_join(x = ., 
             y = SM %>% 
-              select(Comunidades, Enfermedades, Personas),
+              select(Comunidades, Enfermedades, SM_pers),
             by = "Comunidades")
+
+
+#AF_SM <-  
+#  AF %>% 
+#  select(Comunidades, Frecuencia, AF_pers) %>% 
+#  full_join(x = ., 
+#            y = SM %>% 
+#              select(Comunidades, Enfermedades, SM_pers),
+#            by = "Comunidades") %>% 
+#  drop_na()
+
 
 AF_SM
 View(AF_SM)
 
 
 # Gráfica
+
 AF_SM %>% 
-  ggplot(data = ., aes(x = Personas, y = dias_prom)) +
+  ggplot(data = ., aes(x = pers_prom, y = SM_pers)) +
   geom_point(aes(colour = factor(Comunidades)), 
              show.legend = FALSE) +
-  geom_smooth() + # no me pinta la linea
+  geom_smooth() + 
   theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
   facet_wrap( ~ Enfermedades, nrow = 1) +
   labs(
-    x = "Nº personas con trastorno mental ",
-    y = "Frecuencia de actividad física",
+    x = "Frecuencia de actividad física ",
+    y = "Número de personas con trastorno mental",
     title = "Relación actividades física y salud mental ",
     colour = "Comunidades Autónomas"
     
   )
 
+#AF_SM %>% 
+#  ggplot(data = ., aes(x = Frecuencia, y = AF_pers)) +
+#  geom_point(aes(colour = factor(Comunidades)), 
+#             show.legend = FALSE) +
+#  geom_smooth() + # no me pinta la linea
+  #theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+#  facet_wrap( ~ Enfermedades, nrow = 1) +
+#  labs(
+#    x = "Frecuencia de actividad física ",
+#    y = "Número de personas con trastorno mental",
+#    title = "Relación actividades física y salud mental ",
+#    colour = "Comunidades Autónomas"
+    
+#  )
 
 
 # * Relación entre zonas verdes y salud mental. ---------------------------
 
 ZV_SM <-  
   ZV %>% 
-  select(comunidades, Valoración) %>% 
+  select(comunidades, Valoracion) %>% 
   full_join(x = ., 
             y = SM %>% 
-              select(Comunidades, Enfermedades, Personas),
+              select(Comunidades, Enfermedades, SM_pers),
             by = c("comunidades" = "Comunidades"))
 
 ZV_SM
@@ -166,12 +193,12 @@ View(ZV_SM)
 
 # Gráfica
 ZV_SM %>% 
-  #filter(Valoración > 4) %>% 
-  ggplot(data = ., aes(x = Personas, y = Valoración)) +
+  filter(Valoracion > 4) %>% 
+  ggplot(data = ., aes(x = SM_pers, y = Valoracion)) +
   geom_point(aes(colour = factor(comunidades)), 
              show.legend = FALSE) +
   geom_smooth() +
-  theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+  #theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
   facet_wrap( ~ Enfermedades, nrow = 1) +
   labs(
     x = "Nº personas con trastorno mental ",
