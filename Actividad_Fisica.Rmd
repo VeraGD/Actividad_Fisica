@@ -132,6 +132,14 @@ grafico1 <- AF_ZV %>%
 plot(grafico1)
 ```
 
+### 1.1. Conclusión:
+
+Las personas que realizan menos ejercicio físico valoran más positivamente las zonas verdes.
+
+La gente que hace ejercicio más a menudo tiene una opinión más baja sobre las zonas verdes.
+
+Desde casa se ve todo mejor.
+
 
 ### 2. Relación actividad física y salud mental
 Análisis sobre a mayor frecuencia de actvidad física, disminuye la población que padece depresión y ansiedad.
@@ -170,6 +178,12 @@ grafico2 <- AF_SM %>%
 plot(grafico2)
 ```
 
+### 2.1. Conclusión:
+A menor actividad física no presentan ningún trastorno mental.
+
+A mayor actividad física tampoco tienen ningún trastorno mental.
+
+Por tanto, es en una actividad media, de 3 a 4 días, donde encontramos mayor número de trastornos mentales.
 
 
 ### 3. Relación salud mental y zonas verdes
@@ -209,4 +223,28 @@ grafico3 <- ZV_SM %>%
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 plot(grafico3)
 ```
+
+### 3.1. Conclusión:
+
+No se aprecia una relación significativa. Ya que se observa una distribución homogenea. 
+
+En cuanto a ansiedad podemos afirmar:
+
+* A menor valoración más personas con trastorno mental.
+
+* A mayor valoración menos personas con trastorno.
+
+En relación a depresión:
+
+* No se aprecia una distribución concreta.
+
+### 4. Conclusión general:
+
+Lo esperable es que a mayor satisfacción de zonas verdes, la gente realiza más ejercicio.
+
+Por otra parte, lo más logico es que a valores medios de ejercicio físico las personas sean "sanas", y a niveles extremos de ejercicio, es decir, mayor y menor actividad física, deberían presentar ansiedad y/o depresión.
+
+El resultado obtenido no concuerda para nada con lo esperado.
+
+Por último, entre la sastisfacción de zonas verdes y la salud mental no presentan relación alguna. Bajo nuestro punto de vista, cuanto mayor sea la satisfacción de las personas menos enfermedades mentales padecen. Porque pueden salir con más frecuencia a la calle, cuanto mejor sea el mantenimiento de parques y jardines es más apetecible salir.
 
