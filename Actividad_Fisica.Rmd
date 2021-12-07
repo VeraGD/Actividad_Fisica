@@ -241,7 +241,8 @@ grafico3 <- ZV_SM %>%
   ggplot(data = ., aes(x = SM_pers, y = Valoracion)) +
   geom_point(aes(colour = factor(comunidades)), 
              show.legend = FALSE) +
-  geom_smooth() +
+  #geom_smooth() +
+  geom_smooth(method = "lm", formula = y~poly(x, 3)) +
   theme_bw() +
   facet_wrap( ~ Enfermedades, nrow = 1) +
   labs(
