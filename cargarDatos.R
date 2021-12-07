@@ -36,8 +36,8 @@ actFisica %>%
          d5_6 = `5 o 6 días a la semana`,
          d7 = `7 días a la semana`) %>% 
   select(c(1,4:7)) %>% 
-  pivot_longer(names_to = "Frecuencia", values_to = "AF_pers", cols = c(d1_2:`d7`)) %>% 
-  group_by(Comunidades)
+  pivot_longer(names_to = "Frecuencia", values_to = "AF_pers", cols = c(d1_2:`d7`)) 
+ 
   
 
 AF
@@ -58,22 +58,6 @@ AF%>%
 # En general la gente realiza ejercicio de 3 a 4 días a la semana.
 
 
-
-# Tabla de actividad física obteniendo solo los valores máximos.
-# AF2 <-
-#   actFisica %>% 
-#   slice(3:21) %>% 
-#   rename(Comunidades = ...1,
-#          d1_2 = `1 o 2 días a la semana`, 
-#          d3_4 = `3 o 4 días a la semana`,
-#          d5_6 = `5 o 6 días a la semana`,
-#          d7 = `7 días a la semana`) %>% 
-#   select(c(1,4:7)) %>% 
-#   pivot_longer(names_to = "Frecuencia", values_to = "AF_pers", cols = c(d1_2:`d7`)) %>% 
-#   group_by(Comunidades) %>%
-#   slice(which.max(AF_pers))
-# 
-# AF2
 
 # * Salud mental ----------------------------------------------------------
 
@@ -117,15 +101,6 @@ levels(factor(SM$Comunidades))
 
 
 # * Relación entre zonas verdes y actividad física. -----------------------
-
-# Tabla solo con los valores maximos
- # AF_ZV2 <-  
- #   AF2 %>% 
- #   select(Comunidades, Frecuencia, AF_pers) %>% 
- #   full_join(x = ., 
- #             y = ZV %>% 
- #               select(comunidades, Valoracion),
- #             by = c("Comunidades" = "comunidades"))
 
 
 AF_ZV
@@ -180,7 +155,6 @@ View(AF_SM)
 
 AF_SM %>% 
   ggplot(data = ., aes(x = AF_pers, y = SM_pers))+ 
-#geom_violin(aes(fill=AF_pers))+
   geom_point() +
   geom_smooth(method = "lm", aes(colour = factor(Frecuencia)), level = 0.2) + 
   theme_bw() +
