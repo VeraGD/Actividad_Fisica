@@ -158,6 +158,7 @@ plot(grafico1)
 ```
 
 ### 1.1. Conclusión:
+*(intentaría cambiar los nombres de los niveles, ya que `d1_2` es poco entendible. A lo mejor lo que tenéis acá es simplemente un gradiente de ejercicio, desde `Nada` hasta `Mucho` y en métodos explicáis qué significa cada uno (`d1_2` es poco ejercicio)).
 
 Las personas que realizan menos ejercicio físico valoran más positivamente las zonas verdes.
 
