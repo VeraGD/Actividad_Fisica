@@ -188,9 +188,10 @@ DT::datatable(AF_SM)
 
 ```{r echo=TRUE}
 grafico2 <- AF_SM %>% 
-  ggplot(data = ., aes(x = AF_pers, y = SM_pers))+ 
+  ggplot(data = ., aes(x = AF_pers, y = SM_pers)) + 
   geom_point() +
-  geom_smooth(method = "lm", aes(colour = factor(Frecuencia)), level = 0.2) + 
+  #geom_smooth(method = "lm", aes(colour = factor(Frecuencia)), level = 0.2) + 
+  geom_smooth(method = "lm", formula = y~poly(x, 3), aes(colour = factor(Frecuencia)), level = 0.3) +
   theme_bw() +
   facet_wrap( ~ Enfermedades, nrow = 2) +
   labs(
@@ -207,6 +208,8 @@ plot(grafico2)
 ```
 
 ### 2.1. Conclusión:
+*(Re-interpretar las conclusiones ya que el modelo elegido probablemente no estaba contando "todo el cuento")
+
 A menor actividad física no presentan ningún trastorno mental.
 
 A mayor actividad física tampoco tienen ningún trastorno mental.
