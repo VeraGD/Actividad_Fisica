@@ -12,7 +12,7 @@ actFisica <- read_excel("INPUT/DATA/Act_Fisica.xlsx",
 saludMental <- read_excel("INPUT/DATA/s_mental.xlsx", 
                           range = "A9:CS71")
 
-View(saludMental)
+
 # Tabla satisfacción con las zonas verdes
 zonasVerdes <- read_excel("INPUT/DATA/satisf_ZV.xlsx", 
                           range = "A7:F27")
@@ -36,44 +36,28 @@ actFisica %>%
          d5_6 = `5 o 6 días a la semana`,
          d7 = `7 días a la semana`) %>% 
   select(c(1,4:7)) %>% 
-  pivot_longer(names_to = "Frecuencia", values_to = "AF_pers", cols = c(d1_2:`d7`)) %>% 
-  group_by(Comunidades)
+  pivot_longer(names_to = "Frecuencia", values_to = "AF_pers", cols = c(d1_2:`d7`)) 
+ 
   
+
+AF
+View(AF)  
 
 # Gráfico vista general de actividad física
 AF%>% 
   ggplot(data = ., aes(x = Frecuencia, y = AF_pers)) +
   geom_violin(aes(fill=AF_pers))+
-  geom_point(aes(colour = Comunidades), 
-             show.legend = FALSE) +
   theme_bw() +
   labs(
     x = "Frecuencia de actividad física",
     y = "Numero de personas",
     title = "Frecuencia de actividad física ",
     colour = "Comunidades Autónomas"
-    
   )
- 
 
-AF
-View(AF)  
+# En general la gente realiza ejercicio de 3 a 4 días a la semana.
 
-# Tabla de actividad física obteniendo solo los valores máximos.
-# AF2 <-
-#   actFisica %>% 
-#   slice(3:21) %>% 
-#   rename(Comunidades = ...1,
-#          d1_2 = `1 o 2 días a la semana`, 
-#          d3_4 = `3 o 4 días a la semana`,
-#          d5_6 = `5 o 6 días a la semana`,
-#          d7 = `7 días a la semana`) %>% 
-#   select(c(1,4:7)) %>% 
-#   pivot_longer(names_to = "Frecuencia", values_to = "AF_pers", cols = c(d1_2:`d7`)) %>% 
-#   group_by(Comunidades) %>%
-#   slice(which.max(AF_pers))
-# 
-# AF2
+
 
 # * Salud mental ----------------------------------------------------------
 
@@ -107,9 +91,9 @@ View(ZV)
 
 # Comprobar que todos los niveles son iguales.
 
-levels(AF$Comunidades)
-ZV$comunidades
-SM$Comunidades
+levels(factor(AF$Comunidades))
+levels(factor(ZV$comunidades))
+levels(factor(SM$Comunidades))
 
 
 
@@ -117,15 +101,6 @@ SM$Comunidades
 
 
 # * Relación entre zonas verdes y actividad física. -----------------------
-
-# Tabla solo con los valores maximos
- # AF_ZV2 <-  
- #   AF2 %>% 
- #   select(Comunidades, Frecuencia, AF_pers) %>% 
- #   full_join(x = ., 
- #             y = ZV %>% 
- #               select(comunidades, Valoracion),
- #             by = c("Comunidades" = "comunidades"))
 
 
 AF_ZV
@@ -148,30 +123,17 @@ View(AF_ZV)
 AF_ZV %>% 
   filter(Valoracion > 4) %>% 
   ggplot(data = ., aes(x = AF_pers, y = Valoracion)) +
-    geom_point(aes(colour = Comunidades), 
-               show.legend = FALSE) +
-    geom_smooth() +
-    facet_wrap( ~ Frecuencia, nrow = 1) +
-    theme_bw() +
+  geom_point() +
+  geom_smooth(method = "lm", aes(colour = factor(Frecuencia)), level = 0.3) +
+  theme_bw() +
   labs(
     x = "Nº de personas que hace ejercicio",
     y = "Valoracion de zonas verdes",
-    title = "Relación actividades física y zonas verdes ",
-    colour = "Comunidades Autónomas"
+    title = "Relación actividad física y zonas verdes ",
+    colour = "Días ejercicio"
     
   )
 
-# AF_ZV %>% 
-#   filter(Valoracion > 4) %>% 
-#   ggplot(data = ., aes(x = Frecuencia)) +
-#   geom_bar(aes(fill = factor(Valoracion)), colour = "white") +
-#   theme_bw() +
-#   labs(
-#     x = "Días de actividad física",
-#     y = "Valoración de zonas verdes",
-#     title = "Relación actividades física y zonas verdes ",
-#     fill = "Valoración"
-#   )
 
 
 # * Relación entre actividad física y salud mental. -----------------------
@@ -193,32 +155,18 @@ View(AF_SM)
 
 AF_SM %>% 
   ggplot(data = ., aes(x = AF_pers, y = SM_pers))+ 
-#geom_violin(aes(fill=AF_pers))+
-  geom_point(aes(colour = factor(Comunidades)), 
-             show.legend = FALSE) +
-  geom_smooth() + 
+  geom_point() +
+  geom_smooth(method = "lm", aes(colour = factor(Frecuencia)), level = 0.2) + 
   theme_bw() +
-  facet_wrap(  Enfermedades ~ Frecuencia, nrow = 2) +
+  facet_wrap( ~ Enfermedades, nrow = 2) +
   labs(
-    x = "Frecuencia de actividad física ",
-    y = "Número de personas con trastorno mental",
-    title = "Relación actividades física y salud mental ",
-    colour = "Comunidades Autónomas"
+    x = "Nº de personas que hace ejercicio",
+    y = "% de personas con trastorno",
+    title = "Relación actividad física y salud mental ",
+    colour = "Días de ejercicio"
     
   )
 
-
-# AF_SM %>% 
-#   ggplot(data = ., aes(x = Frecuencia)) +
-#   geom_bar(aes(fill = factor(SM_pers)), colour = "white", na.rm = TRUE) +
-#   theme_bw() +
-#   facet_wrap( ~ Enfermedades, nrow = 1)+
-#   labs(
-#     x = "Días de actividad física",
-#     y = "Personas",
-#     title = "Relación actividades física y Enfermedades ",
-#     fill = "Porcentaje de personas"
-#   )
 
 
 
@@ -243,7 +191,7 @@ ZV_SM %>%
   geom_point(aes(colour = factor(comunidades)), 
              show.legend = FALSE) +
   geom_smooth() +
-  #theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+  theme_bw() +
   facet_wrap( ~ Enfermedades, nrow = 1) +
   labs(
     x = "% personas con trastorno mental ",
