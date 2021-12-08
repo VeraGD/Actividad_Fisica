@@ -141,7 +141,8 @@ grafico1 <- AF_ZV %>%
   filter(Valoracion > 4) %>% 
   ggplot(data = ., aes(x = AF_pers, y = Valoracion)) +
   geom_point() +
-  geom_smooth(method = "lm", aes(colour = factor(Frecuencia)), level = 0.3) +
+  #geom_smooth(method = "lm", aes(colour = factor(Frecuencia)), level = 0.3) +
+  geom_smooth(method = "lm", formula = y~poly(x, 3), aes(colour = factor(Frecuencia)), level = 0.3) +
   theme_bw() +
   labs(
     x = "Nº de personas que hace ejercicio",
@@ -157,6 +158,7 @@ plot(grafico1)
 ```
 
 ### 1.1. Conclusión:
+*(intentaría cambiar los nombres de los niveles, ya que `d1_2` es poco entendible. A lo mejor lo que tenéis acá es simplemente un gradiente de ejercicio, desde `Nada` hasta `Mucho` y en métodos explicáis qué significa cada uno (`d1_2` es poco ejercicio)).
 
 Las personas que realizan menos ejercicio físico valoran más positivamente las zonas verdes.
 
@@ -186,9 +188,10 @@ DT::datatable(AF_SM)
 
 ```{r echo=TRUE}
 grafico2 <- AF_SM %>% 
-  ggplot(data = ., aes(x = AF_pers, y = SM_pers))+ 
+  ggplot(data = ., aes(x = AF_pers, y = SM_pers)) + 
   geom_point() +
-  geom_smooth(method = "lm", aes(colour = factor(Frecuencia)), level = 0.2) + 
+  #geom_smooth(method = "lm", aes(colour = factor(Frecuencia)), level = 0.2) + 
+  geom_smooth(method = "lm", formula = y~poly(x, 3), aes(colour = factor(Frecuencia)), level = 0.3) +
   theme_bw() +
   facet_wrap( ~ Enfermedades, nrow = 2) +
   labs(
@@ -205,6 +208,8 @@ plot(grafico2)
 ```
 
 ### 2.1. Conclusión:
+*(Re-interpretar las conclusiones ya que el modelo elegido probablemente no estaba contando "todo el cuento")
+
 A menor actividad física no presentan ningún trastorno mental.
 
 A mayor actividad física tampoco tienen ningún trastorno mental.
@@ -236,7 +241,8 @@ grafico3 <- ZV_SM %>%
   ggplot(data = ., aes(x = SM_pers, y = Valoracion)) +
   geom_point(aes(colour = factor(comunidades)), 
              show.legend = FALSE) +
-  geom_smooth() +
+  #geom_smooth() +
+  geom_smooth(method = "lm", formula = y~poly(x, 3)) +
   theme_bw() +
   facet_wrap( ~ Enfermedades, nrow = 1) +
   labs(
