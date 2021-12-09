@@ -2,7 +2,15 @@
 title: "Actividad física, zonas verdes y salud mental"
 author: "Vera García Díez y Sara González Bárcena"
 date: '`r format(Sys.Date(), "%d %B %Y")`'
-output: html_document
+output: 
+  html_document:
+    df_print: paged
+    theme: readable
+    toc: yes
+    toc_float: yes
+  pdf_document:
+    toc: yes
+
 ---
 
 
@@ -10,7 +18,7 @@ output: html_document
 
 
 ## Objetivo General
-Analizar si existe alguna relación entre la realización de actividad física a mayor zonas verdes y la salud mental de las personas.
+Analizar si existe alguna relación entre la realización de actividad física a mayor satisfacción de zonas verdes y la salud mental de las personas.
 
 Los datos han sido obtenidos del *Instituto Nacional de Estadística (INE)*.
 
@@ -30,7 +38,7 @@ library(tidyverse)
 library(DT)
 ```
 
-### Tabla modificada satisfacción con las zonas verdes por CCA y nivel de satisfacción.
+### Tabla modificada de satisfacción de las zonas verdes por CCA.
 
 ```{r include=FALSE}
 zonasVerdes <- read_excel("INPUT/DATA/satisf_ZV.xlsx", 
@@ -69,7 +77,7 @@ DT::datatable(SM)
 ```
 
 
-### Tabla modificada con la frecuencia de actividad física la semana por CCAA.
+### Tabla modificada con la frecuencia de actividad física a la semana por CCAA.
 ```{r include=FALSE}
 actFisica <- read_excel("INPUT/DATA/Act_Fisica.xlsx", 
                         range = "A7:H70")
@@ -190,7 +198,6 @@ DT::datatable(AF_SM)
 grafico2 <- AF_SM %>% 
   ggplot(data = ., aes(x = AF_pers, y = SM_pers)) + 
   geom_point() +
-  #geom_smooth(method = "lm", aes(colour = factor(Frecuencia)), level = 0.2) + 
   geom_smooth(method = "lm", formula = y~poly(x, 3), aes(colour = factor(Frecuencia)), level = 0.3) +
   theme_bw() +
   facet_wrap( ~ Enfermedades, nrow = 2) +
@@ -241,7 +248,6 @@ grafico3 <- ZV_SM %>%
   ggplot(data = ., aes(x = SM_pers, y = Valoracion)) +
   geom_point(aes(colour = factor(comunidades)), 
              show.legend = FALSE) +
-  #geom_smooth() +
   geom_smooth(method = "lm", formula = y~poly(x, 3)) +
   theme_bw() +
   facet_wrap( ~ Enfermedades, nrow = 1) +

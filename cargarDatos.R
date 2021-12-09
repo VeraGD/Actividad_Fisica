@@ -124,15 +124,16 @@ AF_ZV %>%
   filter(Valoracion > 4) %>% 
   ggplot(data = ., aes(x = AF_pers, y = Valoracion)) +
   geom_point() +
-  geom_smooth(method = "lm", aes(colour = factor(Frecuencia)), level = 0.3) +
+  geom_smooth(method = "lm", formula = y~poly(x, 3), aes(colour = factor(Frecuencia)), level = 0.3) +
   theme_bw() +
   labs(
     x = "Nº de personas que hace ejercicio",
     y = "Valoracion de zonas verdes",
     title = "Relación actividad física y zonas verdes ",
-    colour = "Días ejercicio"
+    colour = "Días ejercicio",
     
-  )
+  )+
+  scale_fill_hue(labels = c("1","2","3","4"))
 
 
 
@@ -156,7 +157,7 @@ View(AF_SM)
 AF_SM %>% 
   ggplot(data = ., aes(x = AF_pers, y = SM_pers))+ 
   geom_point() +
-  geom_smooth(method = "lm", aes(colour = factor(Frecuencia)), level = 0.2) + 
+  geom_smooth(method = "lm", formula = y~poly(x, 3), aes(colour = factor(Frecuencia)), level = 0.3) + 
   theme_bw() +
   facet_wrap( ~ Enfermedades, nrow = 2) +
   labs(
