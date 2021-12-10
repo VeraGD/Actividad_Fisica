@@ -15,9 +15,6 @@ output:
 
 ---
 
-
-
-
 <div>
 <p style = text-align:center>
 <img src= INPUT/IMAGES/ejercicio.jpg>
