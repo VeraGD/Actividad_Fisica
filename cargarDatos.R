@@ -33,10 +33,10 @@ actFisica %>%
   rename(Comunidades = ...1,
          d1_2 = `1 o 2 días a la semana`, 
          d3_4 = `3 o 4 días a la semana`,
-         d5_6 = `5 o 6 días a la semana`,
+         d5_6= `5 o 6 días a la semana`,
          d7 = `7 días a la semana`) %>% 
   select(c(1,4:7)) %>% 
-  pivot_longer(names_to = "Frecuencia", values_to = "AF_pers", cols = c(d1_2:`d7`)) 
+  pivot_longer(names_to = "Frecuencia", values_to = "AF_pers", cols = c(d1_2:d7)) 
  
   
 
@@ -47,7 +47,8 @@ View(AF)
 AF%>% 
   ggplot(data = ., aes(x = Frecuencia, y = AF_pers)) +
   geom_violin(aes(fill=AF_pers))+
-  theme_bw() +
+  scale_x_discrete( labels = c("Poco","Medio","Mucho","Bastante"))+
+  theme_bw() + 
   labs(
     x = "Frecuencia de actividad física",
     y = "Numero de personas",
@@ -123,7 +124,8 @@ View(AF_ZV)
 AF_ZV %>% 
   filter(Valoracion > 4) %>% 
   ggplot(data = ., aes(x = AF_pers, y = Valoracion)) +
-  geom_point() +
+  geom_point(aes(color = Frecuencia)) +
+  scale_color_discrete(labels = c("Poco","Medio","Mucho","Bastante"))+
   geom_smooth(method = "lm", formula = y~poly(x, 3), aes(colour = factor(Frecuencia)), level = 0.3) +
   theme_bw() +
   labs(
@@ -156,7 +158,8 @@ View(AF_SM)
 
 AF_SM %>% 
   ggplot(data = ., aes(x = AF_pers, y = SM_pers))+ 
-  geom_point() +
+  geom_point(aes(color = Frecuencia)) +
+  scale_color_discrete(labels = c("Poco","Medio","Mucho","Bastante"))+
   geom_smooth(method = "lm", formula = y~poly(x, 3), aes(colour = factor(Frecuencia)), level = 0.3) + 
   theme_bw() +
   facet_wrap( ~ Enfermedades, nrow = 2) +
@@ -164,7 +167,7 @@ AF_SM %>%
     x = "Nº de personas que hace ejercicio",
     y = "% de personas con trastorno",
     title = "Relación actividad física y salud mental ",
-    colour = "Días de ejercicio"
+    colour = "Días de ejercicio",
     
   )
 
@@ -191,7 +194,7 @@ ZV_SM %>%
   ggplot(data = ., aes(x = SM_pers, y = Valoracion)) +
   geom_point(aes(colour = factor(comunidades)), 
              show.legend = FALSE) +
-  geom_smooth() +
+  geom_smooth(method = "lm", formula = y~poly(x, 3))+
   theme_bw() +
   facet_wrap( ~ Enfermedades, nrow = 1) +
   labs(
