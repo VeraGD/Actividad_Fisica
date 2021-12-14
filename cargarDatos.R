@@ -69,7 +69,7 @@ SM <-
   saludMental %>% 
   rename(Comunidades = "Ambos sexos", depresión = ...60, ansiedad = ...63) %>% 
   pivot_longer(names_to = "Enfermedades", values_to = "SM_pers", cols = c(depresión, ansiedad)) %>%
-  slice(c(3:44)) %>% 
+  slice(c(3:40)) %>% 
   select(c(1,96,97)) 
   
 SM
@@ -147,8 +147,8 @@ AF_SM <-
   full_join(x = ., 
             y = SM %>% 
               select(Comunidades, Enfermedades, SM_pers),
-            by = "Comunidades") %>% 
-  drop_na()
+            by = "Comunidades")
+  
 
 AF_SM
 View(AF_SM)
