@@ -25,7 +25,7 @@ output:
 <div style="text-align: justify">
 
 ## <span style="color:#0099CC">1. Objetivo General </span>
-El objetivo general de este trabajo es analizar si existe alguna relación entre la realización de actividad física a mayor satisfacción de zonas verdes y la salud mental de las personas.
+El objetivo general de este trabajo es analizar si las personas realizan más ejercicio físico a mayor satisfacción con las zonas verdes. Por otra parte, observar si la frecuencia de la actividad física influye en la mejora de la salud mental de las personas. Por último, determinar si el buen cuidado de las zonas verdes repercute de forma significativa en la salud mental.
 
 A través de diferentes bases de datos logrado recopilar información referida a dichos aspectos. 
 
