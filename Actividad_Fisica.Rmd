@@ -3,7 +3,7 @@ title: <span style="color:#0000FF">Actividad física, zonas verdes y salud menta
 author: 
 - name: "Vera García Díez y Sara González Bárcena"
   affiliation: "Universidad de Burgos, Grado en Ingeniería de la Salud"
-date: '`r format(Sys.Date(), "%d %B %Y")`'
+date: "15 diciembre 2021"
 output: 
   html_document:
     df_print: paged
@@ -290,8 +290,6 @@ plot(grafico3)
 ```
 
 ### <span style="color:#00CCCC">2.3.1 Conclusión: </span>
-
-No se aprecia una relación significativa. Ya que se observa una distribución homogenea. 
 
 En cuanto a ansiedad podemos afirmar:
 
